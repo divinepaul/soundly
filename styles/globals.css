@@ -1,0 +1,42 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+body,html {
+    height: 100%;
+}
+#__next {
+    height: 100%;
+}
+table {
+    border-collapse: collapse;
+}
+td,th {
+    padding: 10px 20px;
+    border: 1px solid black;
+}
+th {
+    background: #f542ec;
+    color: white;
+}
+
+.default-padding {
+    padding: 2% 5%;
+    padding-top: 4%;
+}
+
+.music-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 40px;
+}
+
+.music-grid-item img {
+    height: 200px;
+    width: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+
+}
