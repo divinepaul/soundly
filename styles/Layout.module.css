@@ -77,9 +77,15 @@ box-shadow:  9px 9px 18px #c7c7c7,
     align-items: center;
 } 
 .titleSectionImage img {
-    height: 60px;
-    width: 60px;
+    height: 75px;
+    width: 75px;
     border-radius: 5px;
     object-fit: cover;
     margin-right: 10px;
+}
+.musicTitle {
+    font-weight: 800;
+}
+.artistName {
+    font-size: 14px;
 }

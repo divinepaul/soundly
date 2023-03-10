@@ -3,7 +3,7 @@ import { auth } from "@/lib/random_functions";
 
 export default async function handler(req, res) {
     try {
-        let musics = await db.select("music_id").from("tbl_music")
+        let musics = await db.select().from("tbl_music")
         .innerJoin("tbl_artist", "tbl_artist.artist_id", "tbl_music.artist_id")
         .innerJoin("tbl_genre", "tbl_music.genre_id", "tbl_genre.genre_id")
         .innerJoin("tbl_language", "tbl_music.language_id", "tbl_language.language_id")

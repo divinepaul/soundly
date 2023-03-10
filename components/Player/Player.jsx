@@ -14,6 +14,26 @@ import UserContext from "@/lib/usercontext";
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import MusicContext from "@/lib/musiccontext";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import Modal from "../Modal";
+import Form from "../Form/Form";
+
+
+let addPlaylistForm = {
+    apiRoute: '/api/admin/category/add',
+    submitButtonText: "Create",
+    inputs: {
+        "playlist_name": {
+            type: "text",
+            label: "Playlist Name",
+            required: true,
+            minLength: 5,
+            maxLength: 30,
+        }
+    }
+};
 
 export default function Player() {
 
@@ -26,21 +46,33 @@ export default function Player() {
     const [volume, setVolume] = useState(100);
 
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const [music, setCurrentSong, setPlayList] = useContext(MusicContext);
 
     let player = useRef();
-
+    let ref = useRef();
 
     useEffect(() => {
         if (music.currentSong) {
-            console.log(music.currentSong);
             player.current.src = "/api/file/" + music.currentSong.music_id;
             player.current.volume = volume / 100;
             player.current.play();
             setIsPlaying(true);
         }
-        console.log(music);
+        if(window.interval){
+            clearInterval(window.interval);
+        }
+        window.interval = setInterval(() => {
+            if (music && music.currentSong) {
+                if (!player.current.paused) {
+                    if (player.current.currentTime + 1 > player.current.duration) {
+                        nextSong();
+                    }
+                    setCurrentTime(player.current.currentTime);
+                }
+            }
+        }, 1000);
     }, [music]);
 
 
@@ -48,13 +80,6 @@ export default function Player() {
         if (music.currentSong) {
             player.current.src = "/api/file/" + music.currentSong.music_id;
         }
-        setInterval(() => {
-            if (music.currentSong) {
-                if (!player.current.paused) {
-                    setCurrentTime(player.current.currentTime);
-                }
-            }
-        }, 1000);
     }, []);
 
     let toggleMusic = () => {
@@ -68,23 +93,32 @@ export default function Player() {
         }
     }
 
-    let changeMusic = async (music) => {
-        //player.current.pause();
-        //player.current.currentTime = 0;
-        //setCurrentTime(0);
-        //setMusic(music);
-        //setIsPlaying(true);
-    }
 
     let nextSong = async () => {
         if (music.currentSong) {
+            let nextSongIndex = (getCurrentSongIndex() + 1) % music.playlist.length;
+            setCurrentSong(music.playlist[nextSongIndex]);
 
         }
     }
 
     let previousSong = async () => {
         if (music.currentSong) {
+            let previousSongIndex = (getCurrentSongIndex() - 1) % music.playlist.length;
+            if (previousSongIndex < 0) {
+                previousSongIndex = music.playlist.length - 1;
+            }
+            setCurrentSong(music.playlist[previousSongIndex]);
 
+        }
+    }
+
+
+    let getCurrentSongIndex = () => {
+        for (let i = 0; i < music.playlist.length; i++) {
+            if (music.currentSong.music_id == music.playlist[i].music_id) {
+                return i;
+            }
         }
     }
 
@@ -105,34 +139,39 @@ export default function Player() {
             <div className={styles.titleSection}>
                 <div className={styles.titleSectionImage}>
                     {music.currentSong ?
-                        <img src={"/api/image/music/"+music.currentSong.music_id}/>
+                        <img src={"/api/image/music/" + music.currentSong.music_id} />
                         : <></>}
                 </div>
 
                 <div>
-                <p className={styles.musicTitle}>
-                    {music.currentSong ?
-                        music.currentSong.music_name
-                        : <></>}
-                </p>
-                <div className={styles.controlsContainer}>
-                    <IconButton>
-                        <FastRewindRounded />
-                    </IconButton>
-                    <IconButton>
+                    <p className={styles.musicTitle}>
+                        {music.currentSong ?
+                            music.currentSong.music_name
+                            : <></>}
+                    </p>
+                    <p className={styles.artistName}>
+                        {music.currentSong ?
+                            music.currentSong.artist_name
+                            : <></>}
+                    </p>
+                    <div className={styles.controlsContainer}>
+                        <IconButton onClick={previousSong}>
+                            <FastRewindRounded />
+                        </IconButton>
+                        <IconButton>
 
-                        {!isPlaying ?
-                            <PlayArrowRounded onClick={toggleMusic} fontSize="large" />
-                            :
-                            <PauseRounded onClick={toggleMusic} fontSize="large" />
-                        }
+                            {!isPlaying ?
+                                <PlayArrowRounded onClick={toggleMusic} fontSize="large" />
+                                :
+                                <PauseRounded onClick={toggleMusic} fontSize="large" />
+                            }
 
 
-                    </IconButton>
-                    <IconButton aria-label="next song">
-                        <FastForwardRounded />
-                    </IconButton>
-                </div>
+                        </IconButton>
+                        <IconButton onClick={nextSong}>
+                            <FastForwardRounded />
+                        </IconButton>
+                    </div>
                 </div>
 
 
@@ -161,6 +200,30 @@ export default function Player() {
                 <VolumeUp style={{ margin: '10px' }} />
                 <Slider size="small" value={volume} onChange={changeVolume} min={0} max={100} step={1} aria-label="Disabled slider" />
             </div>
+            <div className={styles.musicActions}>
+                <IconButton>
+                    <FavoriteBorderIcon />
+                </IconButton>
+                <IconButton onClick={()=>setIsAddModalOpen(!isAddModalOpen)}>
+                    <PlaylistAddIcon />
+                </IconButton>
+                <IconButton>
+                    <QueueMusicIcon />
+                </IconButton>
+            </div>
+
+            <Modal isOpen={isAddModalOpen} onClose={() => { setIsAddModalOpen(!isAddModalOpen) }} >
+                <div className="admin-modal">
+                    <h1>Add to Playlist </h1>
+                    <br/>
+                    <br/>
+                    <div className="create-playlist-form">
+                        <h3> Create a playlist</h3>
+                        <br/>
+                        <Form ref={ref} formDetails={addPlaylistForm} onResponse={()=>{}} />
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

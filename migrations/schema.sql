@@ -77,6 +77,24 @@ CREATE TABLE `tbl_customer` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_follower`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_follower` (
+  `follower_id` int(10) NOT NULL AUTO_INCREMENT,
+  `email` varchar(25) DEFAULT NULL,
+  `artist_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`follower_id`),
+  KEY `email` (`email`),
+  KEY `artist_id` (`artist_id`),
+  CONSTRAINT `tbl_follower_ibfk_1` FOREIGN KEY (`email`) REFERENCES `tbl_login` (`email`),
+  CONSTRAINT `tbl_follower_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `tbl_artist` (`artist_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_genre`
 --
 
@@ -166,6 +184,42 @@ CREATE TABLE `tbl_payment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_playlist_child`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_playlist_child` (
+  `playlist_child_id` int(10) NOT NULL AUTO_INCREMENT,
+  `playlist_master_id` int(10) DEFAULT NULL,
+  `music_id` int(10) DEFAULT NULL,
+  `date_added` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`playlist_child_id`),
+  KEY `playlist_master_id` (`playlist_master_id`),
+  KEY `music_id` (`music_id`),
+  CONSTRAINT `tbl_playlist_child_ibfk_1` FOREIGN KEY (`playlist_master_id`) REFERENCES `tbl_playlist_master` (`playlist_master_id`),
+  CONSTRAINT `tbl_playlist_child_ibfk_2` FOREIGN KEY (`music_id`) REFERENCES `tbl_music` (`music_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_playlist_master`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_playlist_master` (
+  `playlist_master_id` int(10) NOT NULL AUTO_INCREMENT,
+  `email` varchar(25) DEFAULT NULL,
+  `playlist_name` varchar(10) NOT NULL,
+  `playlist_status` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`playlist_master_id`),
+  KEY `email` (`email`),
+  CONSTRAINT `tbl_playlist_master_ibfk_1` FOREIGN KEY (`email`) REFERENCES `tbl_login` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_publisher`
 --
 
@@ -212,5 +266,8 @@ INSERT INTO `schema_migrations` (version) VALUES
   ('20230226122547'),
   ('20230226123338'),
   ('20230302095042'),
-  ('20230302095047');
+  ('20230302095047'),
+  ('20230310112855'),
+  ('20230310112857'),
+  ('20230310112900');
 UNLOCK TABLES;

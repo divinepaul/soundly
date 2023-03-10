@@ -2,11 +2,11 @@ import Layout from '@/components/layout'
 import '@/styles/globals.css'
 import '@/styles/Form.css'
 import '@/styles/Input.css'
+import '@/styles/Modal.css'
 import UserContext from '@/lib/usercontext'
 import { useEffect, useState } from 'react'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import Button from '@mui/material/Button';
 import SearchContext from '@/lib/search'
 import { request } from '@/lib/random_functions'
 import deepcopy from 'deepcopy'
@@ -21,18 +21,35 @@ export default function App({ Component, pageProps }) {
 
     const [searchBy, search] = useState("");
 
-    let setCurrentSong = (music_obj) => {
-        setPlayList(music_obj);
+    let setCurrentSong = async (music_obj, playlist) => {
+        let copy = deepcopy(music);
+        if (playlist) {
+                copy.currentSong = music_obj;
+                copy.playlist = playlist;
+                setMusic(copy);
+        } else {
+            if (!music.playlist.length) {
+                let [_, data] = await request("/api/music/random_playlist");
+                copy.currentSong = music_obj;
+                copy.playlist = data;
+                setMusic(copy);
+            } else {
+                copy.currentSong = music_obj;
+                setMusic(copy);
+            }
+        }
     }
 
-    let setPlayList = async (music_obj,playListId) => {
-        if (!playListId) {
-            let [res, data] = await request("/api/music/random_playlist");
-            let copy = deepcopy(music);
-            copy.currentSong = music_obj;
-            copy.playlist = data;
-            setMusic(copy);
-        }
+    let setPlayList = async (music_obj, playlist) => {
+        //if (!music.playlist.length) {
+            //let [res, data] = await request("/api/music/random_playlist");
+            //let copy = deepcopy(music);
+            //copy.currentSong = music_obj;
+            //copy.playlist = data;
+            //setMusic(copy);
+        //} else {
+
+        //}
     }
 
     useEffect(() => {

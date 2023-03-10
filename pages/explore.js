@@ -12,6 +12,8 @@ export default function Explore() {
 
     const [music, setCurrentSong, setPlayList] = useContext(MusicContext);
 
+    let router = useRouter();
+
     useEffect(() => {
 
         (async () => {
@@ -23,6 +25,9 @@ export default function Explore() {
 
     let changeSong = (music) => {
         setCurrentSong(music);
+        setTimeout(() => {
+            router.push('/current');
+        }, 500);
     }
 
 
