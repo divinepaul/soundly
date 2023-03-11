@@ -5,11 +5,13 @@ import Form from '@/components/Form/Form';
 let registerForm = {
     apiRoute: '/api/auth/artist_register',
     submitButtonText: "Register",
+    buttonFullWidth: true,
     file: true,
     inputs: {
         "email": {
             type: "email",
             label: "Email",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -17,6 +19,7 @@ let registerForm = {
         "artist_name": {
             type: "text",
             label: "Name",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 15,
@@ -25,12 +28,14 @@ let registerForm = {
             type: "password",
             label: "Password",
             required: true,
+            width: '100%',
             minLength: 5,
             maxLength: 50,
         },
         "confirm_password": {
             type: "password",
             label: "Confirm Password",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -51,6 +56,7 @@ let registerForm = {
             datatype: "number",
             label: "Phone",
             required: true,
+            width: '100%',
             minLength: 7,
             maxLength: 10,
         },
@@ -90,9 +96,12 @@ export default function RegisterArtist() {
     }
 
     return (
-        <>
+        <div className="auth-page">
+            <div class="auth-floater">
             <h1>Artist Register</h1>
+            <br/>
             <Form ref={ref} formDetails={registerForm} onSubmit={handleSubmit} />
-        </>
+            </div>
+        </div>
     )
 }

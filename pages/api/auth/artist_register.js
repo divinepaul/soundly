@@ -57,6 +57,20 @@ const handler = async (req,res) => {
                 }
             );
 
+            await db('tbl_playlist_master').insert(
+                [
+                    {
+                        playlist_name: "Favorites",
+                        email: email,
+                    },
+                    {
+                        playlist_name: "deleted-children",
+                        email: email,
+                        playlist_status: 0
+                    }
+                ]
+            );
+
             let artist = await db.select("*").from("tbl_artist").where("email", '=', email).first();
 
             let token = jwt.sign(

@@ -86,9 +86,10 @@ CREATE TABLE `tbl_follower` (
   `follower_id` int(10) NOT NULL AUTO_INCREMENT,
   `email` varchar(25) DEFAULT NULL,
   `artist_id` int(10) DEFAULT NULL,
+  `follow_status` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`follower_id`),
+  UNIQUE KEY `artist_id` (`artist_id`,`email`),
   KEY `email` (`email`),
-  KEY `artist_id` (`artist_id`),
   CONSTRAINT `tbl_follower_ibfk_1` FOREIGN KEY (`email`) REFERENCES `tbl_login` (`email`),
   CONSTRAINT `tbl_follower_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `tbl_artist` (`artist_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -211,7 +212,7 @@ CREATE TABLE `tbl_playlist_child` (
 CREATE TABLE `tbl_playlist_master` (
   `playlist_master_id` int(10) NOT NULL AUTO_INCREMENT,
   `email` varchar(25) DEFAULT NULL,
-  `playlist_name` varchar(10) NOT NULL,
+  `playlist_name` varchar(20) NOT NULL,
   `playlist_status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`playlist_master_id`),
   KEY `email` (`email`),

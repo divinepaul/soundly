@@ -23,13 +23,11 @@ export default function Explore() {
         })();
     }, [searchBy]);
 
-    let changeSong = (music) => {
-        setCurrentSong(music);
-        setTimeout(() => {
-            router.push('/current');
-        }, 500);
+    let changeSong = async (music) => {
+        let [_, data] = await request("/api/music/random_playlist");
+        setCurrentSong(music,data);
+        router.push("/current");
     }
-
 
     return (
         <div className="default-padding">

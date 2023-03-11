@@ -6,10 +6,12 @@ import UserContext from "@/lib/usercontext";
 let loginForm = {
     apiRoute: '/api/login',
     submitButtonText: "Login",
+    buttonFullWidth: true,
     inputs: {
         "email": {
             type: "email",
             label: "Email",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -17,6 +19,7 @@ let loginForm = {
         "password": {
             type: "password",
             label: "Password",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -45,14 +48,19 @@ export default function Login() {
         } else if(user.type == "artist"){
             router.push("/admin/music/view");
         } else {
-
+            router.push("/home");
         }
     }
 
     return (
-        <div className="auth-container">
-            <h1>Login</h1>
-            <Form ref={ref} formDetails={loginForm} onResponse={handleSubmit} />
+        <div className="auth-page">
+            <div class="auth-floater">
+                <h1>Login</h1>
+                <br/>
+                <br/>
+                <br/>
+                <Form ref={ref} formDetails={loginForm} onResponse={handleSubmit} />
+            </div>
         </div>
     );
 }

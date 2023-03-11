@@ -28,15 +28,8 @@ export default function App({ Component, pageProps }) {
                 copy.playlist = playlist;
                 setMusic(copy);
         } else {
-            if (!music.playlist.length) {
-                let [_, data] = await request("/api/music/random_playlist");
-                copy.currentSong = music_obj;
-                copy.playlist = data;
-                setMusic(copy);
-            } else {
-                copy.currentSong = music_obj;
-                setMusic(copy);
-            }
+            copy.currentSong = music_obj;
+            setMusic(copy);
         }
     }
 

@@ -120,7 +120,10 @@ export default forwardRef((props, ref) => {
                     }
                 })}
             {inputElements}
-            <Button onClick={handleSubmit} variant="contained">{formDetails.submitButtonText}</Button>
+
+            <Button
+            fullWidth={formDetails.buttonFullWidth ? formDetails.buttonFullWidth : false}
+                onClick={handleSubmit} variant="contained">{formDetails.submitButtonText}</Button>
         </div>
     );
 });

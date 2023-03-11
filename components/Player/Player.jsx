@@ -9,6 +9,7 @@ import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 import VolumeUpRounded from '@mui/icons-material/VolumeUpRounded';
 import VolumeDownRounded from '@mui/icons-material/VolumeDownRounded';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import UserContext from "@/lib/usercontext";
 import Typography from '@mui/material/Typography';
@@ -19,10 +20,13 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import Modal from "../Modal";
 import Form from "../Form/Form";
+import { useRouter } from "next/router";
+import { requestWithAuth } from "@/lib/random_functions";
+import { Button, Snackbar } from "@mui/material";
 
 
 let addPlaylistForm = {
-    apiRoute: '/api/admin/category/add',
+    apiRoute: '/api/playlist/create',
     submitButtonText: "Create",
     inputs: {
         "playlist_name": {
@@ -46,12 +50,18 @@ export default function Player() {
     const [volume, setVolume] = useState(100);
 
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const [music, setCurrentSong, setPlayList] = useContext(MusicContext);
+    const [user, setUser] = useContext(UserContext);
+
+    const [playlist, setPlaylist] = useState(null);
 
     let player = useRef();
     let ref = useRef();
+    let router = useRouter();
 
     useEffect(() => {
         if (music.currentSong) {
@@ -60,7 +70,7 @@ export default function Player() {
             player.current.play();
             setIsPlaying(true);
         }
-        if(window.interval){
+        if (window.interval) {
             clearInterval(window.interval);
         }
         window.interval = setInterval(() => {
@@ -73,13 +83,28 @@ export default function Player() {
                 }
             }
         }, 1000);
+
+        if (user && (user.type == "artist" || user.type == "customer")) {
+            getCurrentSongLike();
+        }
     }, [music]);
 
 
     useEffect(() => {
+
+        console.log(router.pathname);
+        console.log(router.asPath);
+
         if (music.currentSong) {
             player.current.src = "/api/file/" + music.currentSong.music_id;
         }
+        (async () => {
+            //let [res,playlists] = 
+            if (user && (user.type == "artist" || user.type == "customer")) {
+                let [res, data] = await requestWithAuth(router, '/api/playlist');
+                setPlaylist(data)
+            }
+        })();
     }, []);
 
     let toggleMusic = () => {
@@ -132,6 +157,43 @@ export default function Player() {
         player.current.volume = newValue / 100;
     };
 
+    const onPlaylistCreate = async () => {
+        let [res, data] = await requestWithAuth(router, '/api/playlist');
+        setPlaylist(data)
+    }
+
+    const addToPlaylist = async (playlistItem) => {
+        let [res, data] = await requestWithAuth(router, '/api/playlist/add_to_playlist',
+            {
+                music_id: music.currentSong.music_id,
+                playlist_master_id: playlistItem.playlist_master_id
+            }
+        );
+        setIsAddModalOpen(!isAddModalOpen);
+        router.push("/playlist/" + playlistItem.playlist_master_id);
+    }
+
+    const getCurrentSongLike = async () => {
+        if (music.currentSong) {
+            let [res, data] = await requestWithAuth(router, '/api/playlist/favorite_state',
+                {
+                    music_id: music.currentSong.music_id,
+                }
+            );
+            setLikeCount(data.likesCount);
+            setIsLiked(data.isFavorite);
+        }
+
+    }
+
+    const likeSong = async () => {
+        await requestWithAuth(router, '/api/playlist/add_to_favorites',
+            {
+                music_id: music.currentSong.music_id,
+            }
+        );
+        await getCurrentSongLike();
+    }
 
     return (
         <div className={styles.bottomPlayer}>
@@ -200,30 +262,67 @@ export default function Player() {
                 <VolumeUp style={{ margin: '10px' }} />
                 <Slider size="small" value={volume} onChange={changeVolume} min={0} max={100} step={1} aria-label="Disabled slider" />
             </div>
-            <div className={styles.musicActions}>
-                <IconButton>
-                    <FavoriteBorderIcon />
-                </IconButton>
-                <IconButton onClick={()=>setIsAddModalOpen(!isAddModalOpen)}>
-                    <PlaylistAddIcon />
-                </IconButton>
-                <IconButton>
-                    <QueueMusicIcon />
-                </IconButton>
-            </div>
+
+            {music.currentSong &&
+                <div className={styles.musicActions}>
+                    {user && (user.type == "artist" || user.type == "customer") &&
+
+                        isLiked ?
+                        <Button onClick={likeSong} color="error" variant="outlined" endIcon={<FavoriteIcon color="error" />}>
+                            {likeCount}
+                        </Button>
+                        :
+                        <Button onClick={likeSong}  variant="outlined" endIcon={<FavoriteBorderIcon  />}>
+                            {likeCount}
+                        </Button>
+
+                    }
+                    {user && (user.type == "artist" || user.type == "customer") &&
+                        <IconButton onClick={() => setIsAddModalOpen(!isAddModalOpen)}>
+                            <PlaylistAddIcon />
+                        </IconButton>
+                    }
+                    <IconButton onClick={() => { router.push("/current") }}>
+                        <QueueMusicIcon />
+                    </IconButton>
+                </div>
+            }
 
             <Modal isOpen={isAddModalOpen} onClose={() => { setIsAddModalOpen(!isAddModalOpen) }} >
                 <div className="admin-modal">
                     <h1>Add to Playlist </h1>
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
                     <div className="create-playlist-form">
                         <h3> Create a playlist</h3>
-                        <br/>
-                        <Form ref={ref} formDetails={addPlaylistForm} onResponse={()=>{}} />
+                        <br />
+                        <Form ref={ref} formDetails={addPlaylistForm} onResponse={onPlaylistCreate} />
                     </div>
+                    {playlist &&
+                        <div className="playlist-add-container">
+                            <br />
+                            <br />
+                            <h3>Playlists</h3>
+                            {playlist.map((playlist_item) => (
+                                <div className="playlist-add-item">
+                                    <h4>{playlist_item.playlist_name}</h4>
+                                    <Button variant="contained" onClick={() => addToPlaylist(playlist_item)}>Add</Button>
+                                </div>
+                            ))}
+                        </div>
+                    }
                 </div>
             </Modal>
+            {
+                //<Snackbar
+                //open={}
+                //autoHideDuration={6000}
+                //onClose={handleClose}
+                //message="Note archived"
+                //action={action}
+                ///>
+            }
+
         </div>
     );
 }

@@ -3,10 +3,26 @@ import { NextResponse } from 'next/server'
 
 
 let urlPermissions = {
-    "artist": ["/api/auth/logout", "/api/auth/user"],
-    "publisher": ["/api/auth/logout", "/api/auth/user"],
-    "customer": ["/api/auth/logout", "/api/auth/user"],
-    "admin": ["/api/auth/logout", "/api/auth/user"],
+    "artist": [
+        "/api/auth/logout",
+        "/api/playlist/",
+        "/api/playlist/add_to_playlist",
+        "/api/auth/user"
+    ],
+    "publisher": [
+        "/api/auth/logout",
+        "/api/auth/user"
+    ],
+    "customer": [
+        "/api/auth/logout",
+        "/api/playlist/",
+        "/api/playlist/add_to_playlist",
+        "/api/auth/user"
+    ],
+    "admin": [
+        "/api/auth/logout",
+        "/api/auth/user"
+    ],
 }
 
 const parseJwt = (token) => {

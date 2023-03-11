@@ -38,7 +38,7 @@ export default function AdminMusicAddView(props) {
                 label: "Name",
                 required: true,
                 minLength: 5,
-                maxLength: 15,
+                maxLength: 25,
             },
             "publisher_id": {
                 type: "select",

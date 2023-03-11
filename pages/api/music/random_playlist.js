@@ -3,6 +3,7 @@ import { auth } from "@/lib/random_functions";
 
 export default async function handler(req, res) {
     try {
+            // TODO select only the required feilds
         let musics = await db.select().from("tbl_music")
         .innerJoin("tbl_artist", "tbl_artist.artist_id", "tbl_music.artist_id")
         .innerJoin("tbl_genre", "tbl_music.genre_id", "tbl_genre.genre_id")

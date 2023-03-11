@@ -5,17 +5,20 @@ import { useRouter } from 'next/router';
 let registerForm = {
     apiRoute: '/api/customer_register/',
     submitButtonText: "Register",
+    buttonFullWidth: true,
     inputs: {
         "email": {
             type: "email",
             label: "Email",
             required: true,
+            width: '100%',
             minLength: 5,
             maxLength: 50,
         },
         "customer_name": {
             type: "text",
             label: "Name",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 15,
@@ -26,12 +29,14 @@ let registerForm = {
             required: true,
             minLength: 5,
             maxLength: 50,
+            width: '100%',
         },
         "confirm_password": {
             type: "password",
             label: "Confirm Password",
             required: true,
             minLength: 5,
+            width: '100%',
             maxLength: 50,
         },
         // "customer_gender": {
@@ -47,6 +52,7 @@ let registerForm = {
         // },
         "customer_phone": {
             type: "text",
+            width: '100%',
             datatype: "number",
             label: "Phone",
             required: true,
@@ -62,13 +68,16 @@ export default function CustomerRegister() {
     const router = useRouter();
 
     let handleResponse = (values) => {
-        router.push("/contact");
+        router.push("/home");
     }
 
     return (
-        <>
+        <div className="auth-page">
+            <div class="auth-floater">
             <h1>Register as Customer</h1>
+            <br/>
             <Form ref={ref} formDetails={registerForm} onResponse={handleResponse} />
-        </>
+            </div>
+        </div>
     )
 }

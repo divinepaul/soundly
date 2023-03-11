@@ -6,13 +6,17 @@ export default async function handler(req, res) {
 
         let musics;
         if (req.body.searchBy.length) {
-            musics = await db.select().from("tbl_music")
+            // TODO select only the required feilds
+            musics = await db.select(
+            ).from("tbl_music")
                 .innerJoin("tbl_artist", "tbl_artist.artist_id", "tbl_music.artist_id")
                 .innerJoin("tbl_genre", "tbl_music.genre_id", "tbl_genre.genre_id")
                 .innerJoin("tbl_language", "tbl_music.language_id", "tbl_language.language_id")
                 .where("music_status","=",'paid')
                 .whereILike("music_name", `%${req.body.searchBy}%`)
                 .orWhereILike("artist_name", `%${req.body.searchBy}%`)
+                .orWhereILike("genre_name", `%${req.body.searchBy}%`)
+                .orWhereILike("language_name", `%${req.body.searchBy}%`)
         } else {
             musics = await db.select().from("tbl_music")
                 .innerJoin("tbl_artist", "tbl_artist.artist_id", "tbl_music.artist_id")

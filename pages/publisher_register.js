@@ -5,10 +5,12 @@ import { useRouter } from 'next/router';
 let registerForm = {
     apiRoute: '/api/publisher_register/',
     submitButtonText: "Register",
+    buttonFullWidth: true,
     inputs: {
         "email": {
             type: "email",
             label: "Email",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -16,6 +18,7 @@ let registerForm = {
         "publisher_name": {
             type: "text",
             label: "Name",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 15,
@@ -23,6 +26,7 @@ let registerForm = {
         "password": {
             type: "password",
             label: "Password",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -30,6 +34,7 @@ let registerForm = {
         "confirm_password": {
             type: "password",
             label: "Confirm Password",
+            width: '100%',
             required: true,
             minLength: 5,
             maxLength: 50,
@@ -50,6 +55,7 @@ let registerForm = {
             datatype: "number",
             label: "Phone",
             required: true,
+            width: '100%',
             minLength: 7,
             maxLength: 10,
         },
@@ -67,9 +73,13 @@ export default function Home() {
     }
 
     return (
-        <>
+        <div className="auth-page">
+            <div class="auth-floater">
             <h1>Register as Publisher</h1>
+            <br/>
+            <br/>
             <Form ref={ref} formDetails={registerForm} onResponse={handleResponse} />
-        </>
+            </div>
+        </div>
     )
 }

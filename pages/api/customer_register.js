@@ -22,17 +22,31 @@ export default async function handler(req, res) {
                 }
             );
             await db('tbl_customer').insert(
-                { 
+                {
                     email: req.body.email,
                     customer_name: req.body.customer_name,
-                    customer_phone: req.body.customer_phone, 
+                    customer_phone: req.body.customer_phone,
                 }
+            );
+
+            await db('tbl_playlist_master').insert(
+                [
+                    {
+                        playlist_name: "Favorites",
+                        email: req.body.email,
+                    },
+                    {
+                        playlist_name: "deleted-children",
+                        email: req.body.email,
+                        playlist_status: 0
+                    }
+                ]
             );
 
             let customer = await db.select("*").from("tbl_customer").where("email", '=', req.body.email).first();
             let token = jwt.sign(
                 {
-                    email: req.body.email, 
+                    email: req.body.email,
                     type: "customer",
                     customer_id: customer.customer_id
                 }, process.env.JWT_SECRET, { algorithm: 'HS256', expiresIn: '365d' });
