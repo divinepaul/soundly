@@ -51,6 +51,15 @@ export async function getServerSideProps(context) {
         .where("tbl_follower.email", context.req.user.email)
         .limit(6)
 
+    let artists = await db.select("*")
+        .from("tbl_artist")
+        .limit(6)
+
+    artists = artists.map(music => {
+        delete music.artist_image;
+        return music
+    });
+
     followingArtists = followingArtists.map(music => {
         delete music.artist_image;
         return music
@@ -81,6 +90,7 @@ export async function getServerSideProps(context) {
     languages = JSON.parse(JSON.stringify(languages));
     likedSongs = JSON.parse(JSON.stringify(likedSongs));
     followingArtists = JSON.parse(JSON.stringify(followingArtists));
+    artists = JSON.parse(JSON.stringify(artists));
     playlists = JSON.parse(JSON.stringify(playlists));
 
     return {
@@ -90,7 +100,8 @@ export async function getServerSideProps(context) {
             languages,
             likedSongs,
             followingArtists,
-            playlists
+            playlists,
+            artists
         },
     }
 }
@@ -143,7 +154,7 @@ export default function UserHome(props) {
                 </>
             }
 
-            {props.followingArtists.length > 0 &&
+            {props.followingArtists.length > 0 ? 
                 <>
                     <h2>Artists You follow</h2>
                     <br />
@@ -163,7 +174,28 @@ export default function UserHome(props) {
                     <br />
                     <br />
                 </>
+             : 
+                <>
+                    <h2>Recommened Artists</h2>
+                    <br />
+                    <div className="music-grid">
+                        {props.artists.map((artist) => (
+                            <div onClick={() => router.push("/artist/" + artist.artist_id)} className="music-grid-item">
+                                <img className="artist-list-image" src={"/api/image/artist/" + artist.artist_id} />
+                                <br />
+                                <h3>{artist.artist_name}</h3>
+                            </div>
+                        ))}
+                        <div style={{ display: 'flex', justifyItems: 'center', alignItems: 'center' }}>
+                            <Button variant="outlined" onClick={() => { router.push("/artists")}}>View All Artists</Button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                </>
             }
+
 
             {props.playlists.length > 0 &&
                 <>

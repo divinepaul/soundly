@@ -12,19 +12,20 @@
     align-items: center;
     padding: 10px 20px;;
     height: 70px;
-    background: white;
-    box-shadow:  5px 5px 10px #dadada,
-                 -5px -5px 10px #ffffff;
+    color: var(--font-color);
+    background: var(--seconary-bg);
+    box-shadow:  5px 5px 10px var(--shadow-primary),
+                 -5px -5px 10px var(--shadow-secondary);
 }
 .navSearch {
     width: 60%;
     padding: 10px 20px;
     font-size: 20px;
     border: none;
-border-radius: 20px;
-background: #ffffff;
-box-shadow: inset 9px 9px 18px #e0e0e0,
-            inset -9px -9px 18px #ffffff;
+    border-radius: 20px;
+    background: var(--bg-color);
+    box-shadow: inset 9px 9px 18px var(--shadow-primary),
+            inset -9px -9px 18px var(--shadow-secondary);
 }
 .navSearch:focus {
     outline: none;
@@ -41,14 +42,15 @@ box-shadow: inset 9px 9px 18px #e0e0e0,
     height: 9%;
     bottom: 0;
     z-index: 99999;
+    color: var(--font-color);
     display: flex;
     justify-content: space-evenly;
     position: fixed;
     align-items: center;
     /*border-top: 1px solid black;*/
-box-shadow:  9px 9px 18px #c7c7c7,
-             -9px -9px 18px #ffffff;
-    background: white;
+box-shadow:  9px 9px 18px var(--shadow-primary),
+             -9px -9px 18px var(--shadow-secondary);
+    background: var(--seconary-bg);
     padding: 50px 0; 
 }
 .controlsContainer {

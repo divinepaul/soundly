@@ -1,26 +1,41 @@
+import { useEffect, useState, useRef, useContext } from "react";
+import UserContext from "@/lib/usercontext";
 import Link from 'next/link';
 
 export default function AdminLayout({ children }) {
+
+    const [user, setUser] = useContext(UserContext);
+
     return (
-        <>
+        <div className="admin-container">
             <div className="admin-nav">
-                <Link href="/admin/customer/view">Customer</Link>
-                <br />
-                <Link href="/admin/artist/view">Artist</Link>
-                <br />
-                <Link href="/admin/publisher/view">Publisher</Link>
-                <br />
-                <Link href="/admin/genre/view">Genres</Link>
-                <br />
-                <Link href="/admin/language/view">Languages</Link>
-                <br />
+                {user && user.type == "admin" &&
+                    <Link href="/admin/customer/view">Customer</Link>
+                }
+                {user && user.type == "admin" &&
+                    <Link href="/admin/artist/view">Artist</Link>
+                }
+                {user && user.type == "admin" &&
+                    <Link href="/admin/publisher/view">Publisher</Link>
+                }
+                {user && user.type == "admin" &&
+                    <Link href="/admin/genre/view">Genres</Link>
+                }
+                {user && user.type == "admin" &&
+                    <Link href="/admin/language/view">Languages</Link>
+                }
+                {user && user.type == "admin" &&
+                    <Link href="/admin/cards/view">Cards</Link>
+                }
+                {user && user.type == "admin" &&
+                    <Link href="/admin/playlists/view">Playlists</Link>
+                }
                 <Link href="/admin/music/view">Music</Link>
-                <br />
-                <Link href="/api/auth/logout">Logout</Link>
-                <br />
             </div>
-            {children}
-        </>
+            <div className="admin-content">
+                {children}
+            </div>
+        </div>
 
     );
 

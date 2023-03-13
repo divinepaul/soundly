@@ -8,8 +8,13 @@ export default function Home() {
 
     return (
         <>
-            <h1>SOUNDLY</h1>
-            <p>Shitty music player</p>
+            <div className="hero-section">
+                <img src="/home.jpg"></img>
+                <div className="hero-text">
+                    <h1>SOUNDLY</h1>
+                    <p>One stop for all music.</p>
+                </div>
+            </div>
         </>
     )
 }

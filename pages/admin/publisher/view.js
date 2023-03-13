@@ -25,8 +25,9 @@ export default function AdminPublisherView(props) {
                         <th>email</th>
                         <th>name</th>
                         <th>phone</th>
-                        <th>Edit</th>
                         <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
 
                     {

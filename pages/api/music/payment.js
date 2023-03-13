@@ -6,8 +6,6 @@ export default async function handler(req, res) {
     let id = req.body.id;
 
     try {
-
-
         let card_id = await db('tbl_card').insert({
             card_name: req.body.card_name,
             card_number: req.body.card_number,

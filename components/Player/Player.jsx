@@ -87,6 +87,9 @@ export default function Player() {
         if (user && (user.type == "artist" || user.type == "customer")) {
             getCurrentSongLike();
         }
+        return () => {
+            clearInterval(window.interval);
+        }
     }, [music]);
 
 
@@ -265,8 +268,7 @@ export default function Player() {
 
             {music.currentSong &&
                 <div className={styles.musicActions}>
-                    {user && (user.type == "artist" || user.type == "customer") &&
-
+                    {user && (user.type == "artist" || user.type == "customer") ? 
                         isLiked ?
                         <Button onClick={likeSong} color="error" variant="outlined" endIcon={<FavoriteIcon color="error" />}>
                             {likeCount}
@@ -274,8 +276,7 @@ export default function Player() {
                         :
                         <Button onClick={likeSong}  variant="outlined" endIcon={<FavoriteBorderIcon  />}>
                             {likeCount}
-                        </Button>
-
+                        </Button> : <></>
                     }
                     {user && (user.type == "artist" || user.type == "customer") &&
                         <IconButton onClick={() => setIsAddModalOpen(!isAddModalOpen)}>

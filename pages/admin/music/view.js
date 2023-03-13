@@ -41,11 +41,12 @@ export async function getServerSideProps(context) {
 export default function AdminCustomerView(props) {
     return (
         <AdminLayout>
+            <div class="admin-header">
             <h1>Music</h1>
             {props.user.type == "artist" ?
                 <a href="/admin/music/music_add">Add music</a>
                 : <></>}
-            <br />
+            </div>
             <br />
             <table>
                 <tbody>
@@ -112,7 +113,7 @@ export default function AdminCustomerView(props) {
                                         : <></>
                                     }
 
-                                    {props.user.type == "publisher" ?
+                                    {props.user.type == "publisher" && music.music_status != "paid" ?
                                         <a href={"/admin/music/approve/" + music.music_id}>Approve</a>
                                         : <></>
                                     }
@@ -121,7 +122,8 @@ export default function AdminCustomerView(props) {
                                         <a href={"/api/music/reject/" + music.music_id}>Reject</a>
                                         : <></>
                                     }
-                                    <a href={"/api/music/" + music.music_id}>Delete</a>
+                                    {//<a href={"/api/music/" + music.music_id}>Delete</a>
+                                    }
                                 </td>
 
 

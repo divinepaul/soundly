@@ -16,6 +16,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function AdminCustomerView(props) {
+
     return (
         <AdminLayout>
             <h1>Artists</h1>

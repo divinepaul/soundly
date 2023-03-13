@@ -15,9 +15,10 @@ export async function getServerSideProps(context) {
 export default function AdminCustomerView(props) {
     return (
         <AdminLayout>
+            <div class="admin-header">
             <h1>Genres</h1>
             <a href="/admin/genre/genre_add">Add genre</a>
-            <br/>
+            </div>
             <br/>
             <table>
                 <tbody>
